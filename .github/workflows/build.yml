@@ -3,30 +3,23 @@ name: Build
 on:
   workflow_dispatch:
   push:
-    branches: ["**"]
 
 jobs:
   build:
-    strategy:
-      fail-fast: false
-      matrix:
-        config:
-        - name: Windows
-          os: windows-latest
-          
-    name: ${{ matrix.config.name }}
-    runs-on: ${{ matrix.config.os }}
+    runs-on: windows-latest
     
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          submodules: recursive
       
-      - name: Build the mod
+      - name: Build
         uses: geode-sdk/build-geode-mod@main
+        id: build
+        
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
         with:
-          sdk: v3.8.1
-          bindings: geode-sdk/bindings@v2.206.0
-          
-      - uses: actions/upload-artifact@v4
-        with:
-          name: Build Output
-          path: build/*.geode
+          name: LevelDecorator
+          path: ${{ steps.build.outputs.build-output }}
