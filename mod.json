@@ -1,0 +1,11 @@
+{
+    "geode": "v3.8.1",
+    "gd": {
+        "win": "2.206"
+    },
+    "id": "com.leveldecorator.mod",
+    "name": "Level Decorator",
+    "version": "v1.0.0",
+    "developer": "LevelDecoratorTeam",
+    "description": "Decorate levels with preset templates"
+}
