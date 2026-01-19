@@ -4,10 +4,6 @@
 using namespace geode::prelude;
 
 class $modify(MyEditorUI, EditorUI) {
-    struct Fields {
-        CCMenuItemSpriteExtra* decorateBtn = nullptr;
-    };
-
     bool init(LevelEditorLayer* editor) {
         if (!EditorUI::init(editor)) return false;
 
@@ -18,19 +14,23 @@ class $modify(MyEditorUI, EditorUI) {
         if (!menu) return true;
 
         auto sprite = CCSprite::createWithSpriteFrameName("GJ_button_01.png");
+        if (!sprite) return true;
         sprite->setScale(0.7f);
         
         auto label = CCLabelBMFont::create("D", "bigFont.fnt");
+        if (!label) return true;
         label->setScale(0.5f);
         label->setPosition(sprite->getContentSize() / 2);
         sprite->addChild(label);
 
-        m_fields->decorateBtn = CCMenuItemSpriteExtra::create(
+        auto btn = CCMenuItemSpriteExtra::create(
             sprite,
             this,
             menu_selector(MyEditorUI::onDecorate)
         );
-        menu->addChild(m_fields->decorateBtn);
+        if (!btn) return true;
+        
+        menu->addChild(btn);
         menu->updateLayout();
 
         return true;
@@ -39,7 +39,6 @@ class $modify(MyEditorUI, EditorUI) {
     void onDecorate(CCObject*) {
         auto selected = this->getSelectedObjects();
         if (!selected || selected->count() == 0) {
-            FLAlertLayer::create("No Selection", "Select objects first!", "OK")->show();
             return;
         }
 
@@ -55,7 +54,6 @@ class $modify(MyEditorUI, EditorUI) {
                 glow->setPosition(pos);
                 glow->setScale(1.5f);
                 glow->setZOrder(-1);
-                glow->setObjectColor(ccc3(100, 150, 255));
                 m_editorLayer->m_objectLayer->addChild(glow);
                 m_editorLayer->addToSection(glow);
             }
@@ -64,13 +62,12 @@ class $modify(MyEditorUI, EditorUI) {
                 auto decor = GameObject::createWithKey(1764);
                 if (!decor) continue;
                 
-                float x = (i % 2 == 0) ? -20.f : 20.f;
-                float y = (i < 2) ? 20.f : -20.f;
+                float xOffset = (i % 2 == 0) ? -20.0f : 20.0f;
+                float yOffset = (i < 2) ? 20.0f : -20.0f;
                 
-                decor->setPosition(ccp(pos.x + x, pos.y + y));
+                decor->setPosition(ccp(pos.x + xOffset, pos.y + yOffset));
                 decor->setScale(0.6f);
                 decor->setZOrder(2);
-                decor->setObjectColor(ccc3(200, 200, 255));
                 m_editorLayer->m_objectLayer->addChild(decor);
                 m_editorLayer->addToSection(decor);
             }
