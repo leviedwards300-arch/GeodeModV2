@@ -56,7 +56,7 @@ class $modify(MyEditorUI, EditorUI) {
                 glow->setPosition(pos);
                 glow->setScale(1.5f);
                 glow->setZOrder(-1);
-                glow->setObjectColor({100, 150, 255});
+                glow->setObjectColor(ccc3(100, 150, 255));
                 m_editorLayer->m_objectLayer->addChild(glow);
                 m_editorLayer->addToSection(glow);
             }
@@ -69,10 +69,10 @@ class $modify(MyEditorUI, EditorUI) {
                 float x = (i % 2) ? 20.f : -20.f;
                 float y = (i < 2) ? 20.f : -20.f;
                 
-                decor->setPosition({pos.x + x, pos.y + y});
+                decor->setPosition(ccp(pos.x + x, pos.y + y));
                 decor->setScale(0.6f);
                 decor->setZOrder(2);
-                decor->setObjectColor({200, 200, 255});
+                decor->setObjectColor(ccc3(200, 200, 255));
                 m_editorLayer->m_objectLayer->addChild(decor);
                 m_editorLayer->addToSection(decor);
             }
