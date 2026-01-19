@@ -7,31 +7,28 @@ class $modify(MyEditorUI, EditorUI) {
     bool init(LevelEditorLayer* editor) {
         if (!EditorUI::init(editor)) return false;
 
-        auto editBar = this->getChildByID("edit-button-bar");
-        if (!editBar) return true;
-
-        auto menu = editBar->getChildByType<CCMenu>(0);
-        if (!menu) return true;
-
-        auto sprite = CCSprite::createWithSpriteFrameName("GJ_button_01.png");
-        if (!sprite) return true;
-        sprite->setScale(0.7f);
+        // Create a standalone menu at the top-right
+        auto winSize = CCDirector::sharedDirector()->getWinSize();
+        auto menu = CCMenu::create();
+        menu->setPosition(winSize.width - 50, winSize.height - 50);
+        menu->setID("decorator-menu"_spr);
         
-        auto label = CCLabelBMFont::create("D", "bigFont.fnt");
-        if (!label) return true;
-        label->setScale(0.5f);
-        label->setPosition(sprite->getContentSize() / 2);
-        sprite->addChild(label);
-
-        auto btn = CCMenuItemSpriteExtra::create(
-            sprite,
+        // Create button with bright colors to be very visible
+        auto buttonSprite = ButtonSprite::create(
+            "DECORATE",
+            "bigFont.fnt",
+            "GJ_button_04.png",
+            0.8f
+        );
+        
+        auto button = CCMenuItemSpriteExtra::create(
+            buttonSprite,
             this,
             menu_selector(MyEditorUI::onDecorate)
         );
-        if (!btn) return true;
         
-        menu->addChild(btn);
-        menu->updateLayout();
+        menu->addChild(button);
+        this->addChild(menu, 999);
 
         return true;
     }
@@ -39,6 +36,11 @@ class $modify(MyEditorUI, EditorUI) {
     void onDecorate(CCObject*) {
         auto selected = this->getSelectedObjects();
         if (!selected || selected->count() == 0) {
+            FLAlertLayer::create(
+                "Level Decorator",
+                "Please select objects first!",
+                "OK"
+            )->show();
             return;
         }
 
@@ -49,6 +51,7 @@ class $modify(MyEditorUI, EditorUI) {
 
             auto pos = gameObj->getPosition();
 
+            // Add glow
             auto glow = GameObject::createWithKey(106);
             if (glow) {
                 glow->setPosition(pos);
@@ -58,6 +61,7 @@ class $modify(MyEditorUI, EditorUI) {
                 m_editorLayer->addToSection(glow);
             }
 
+            // Add 4 corner decorations
             for (int i = 0; i < 4; i++) {
                 auto decor = GameObject::createWithKey(1764);
                 if (!decor) continue;
@@ -72,5 +76,12 @@ class $modify(MyEditorUI, EditorUI) {
                 m_editorLayer->addToSection(decor);
             }
         }
+        
+        // Show success popup
+        FLAlertLayer::create(
+            "Success!",
+            "Decorations applied!",
+            "OK"
+        )->show();
     }
 };
