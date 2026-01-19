@@ -50,7 +50,6 @@ class $modify(MyEditorUI, EditorUI) {
 
             auto pos = gameObj->getPosition();
 
-            // Add glow
             auto glow = GameObject::createWithKey(106);
             if (glow) {
                 glow->setPosition(pos);
@@ -61,12 +60,11 @@ class $modify(MyEditorUI, EditorUI) {
                 m_editorLayer->addToSection(glow);
             }
 
-            // Add corner decorations
             for (int i = 0; i < 4; i++) {
                 auto decor = GameObject::createWithKey(1764);
                 if (!decor) continue;
                 
-                float x = (i % 2) ? 20.f : -20.f;
+                float x = (i % 2 == 0) ? -20.f : 20.f;
                 float y = (i < 2) ? 20.f : -20.f;
                 
                 decor->setPosition(ccp(pos.x + x, pos.y + y));
@@ -77,7 +75,5 @@ class $modify(MyEditorUI, EditorUI) {
                 m_editorLayer->addToSection(decor);
             }
         }
-
-        Notification::create("Decorated!", NotificationIcon::Success)->show();
     }
 };
